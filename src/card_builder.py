@@ -135,7 +135,8 @@ def get_metaflow_runs_and_artifacts(flow_name: str, top_n: int = 2):
             # accuracy is the last float in the array
             'accuracy': data.best_model_metrics[-1] if 'best_model_metrics' in data else 0.0,
             'best_learning_rate': data.best_learning_rate if 'best_learning_rate' in data else None,
-            'best_model_summary': data.best_model_summary if 'best_model_summary' in data else None
+            'best_model_summary': data.best_model_summary if 'best_model_summary' in data
+                                                             and data.best_model_summary is not None else ''
         }
         runs_list.append(new_run)
 

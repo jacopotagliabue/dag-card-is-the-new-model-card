@@ -42,7 +42,7 @@
                     <div class="sectionTitle">Owners</div>
                     <div class="sectionContent">
                         <div>
-                            <!-- TODO: I hate css -->
+                            <!-- TODO: I hate html -->
                             <table>
                                 <tr>
                                     {% for owner in owners %}
@@ -105,8 +105,15 @@
                               <summary>Run: {{ run.name }}, {{ run.finished_at }}</summary>
                                 <br/><br/><span><b>Accuracy (Mean Square Error)</b>: {{ run.accuracy }}</span>
                                 <br/><br/><span><b>Learning rate</b>: {{ run.best_learning_rate }}</span>
-                                <br/><br/><span><b>Model file on s3</b>: {{ run.model_path }}</span><br/><br/>
-                                <br/><br/><br/><br/><span>{{ run.best_model_summary }}</span><br/><br/>
+                                <br/><br/><span><b>Model file on s3</b>: {{ run.model_path }}</span>
+                                <br/><br/>
+                                    <b>Model architecture</b>:<br/><br/>
+                                    <span>
+                                         {% for line in run.best_model_summary.split('\n') %}
+                                            {{ line }}<br/>
+                                         {% endfor %}
+                                    </span>
+                                <br/><br/>
                             </details>
                             {% endfor %}
                         </div>
@@ -136,16 +143,18 @@
             </div>
         </div>
     </div>
+    <!-- load dictionaries from the builder into JSON objects -->
     <script>
         var WANDB_RUN = {{ wandb_runs|tojson }};
         console.log(WANDB_RUN);
         var USER_RUNS = {{ user_runs|tojson }};
         console.log(USER_RUNS);
     </script>
+    <!-- first script, produce a line chart for metrics wrt model runs -->
     <script>
         /**
          * Returns a random number between min (inclusive) and max (exclusive)
-        */
+        **/
         function getRandomArbitrary(min, max) {
             return Math.random() * (max - min) + min;
         }
@@ -155,14 +164,14 @@
         for(var i = 0; i < WANDB_RUN[0]['history'].length; i++) {
             labels.push(WANDB_RUN[0]['history'][i]['epoch']);
         }
-        console.log(labels);
         for(var i = 0; i < WANDB_RUN.length; i++) {
             var h = WANDB_RUN[i]['history'];
             var data = [];
             for (var j = 0; j < h.length; j++) {
                 data.push(h[j]['loss'])
             }
-            var color = 'rgb(' + getRandomArbitrary(0, 256) + ', ' + getRandomArbitrary(0, 256) + ', ' + getRandomArbitrary(0, 256) + ')';
+            var color = 'rgb(' + getRandomArbitrary(0, 256) + ', '
+                + getRandomArbitrary(0, 256) + ', ' + getRandomArbitrary(0, 256) + ')';
             var d = {
                         label: WANDB_RUN[i].name,
                         fill: false,
@@ -200,6 +209,7 @@
         });
         console.log('Chart done!');
     </script>
+    <!-- second script, bar chart for the distributions of runs initiated by the users -->
     <script>
         var ctx_bars = document.getElementById('ownerCanvas').getContext('2d');
         var user_labels = Object.keys(USER_RUNS);

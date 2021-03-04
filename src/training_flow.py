@@ -106,7 +106,9 @@ class RegressionModel(FlowSpec):
         print("Current results: {}".format(self.results_from_runs))
         # pick one according to some logic: here just pick a random one
         self.best_learning_rate = choice(list(self.results_from_runs.keys()))
-        self.best_s3_model_path = self.results_from_runs[self.best_learning_rate]['tar']
+        # we anonymize the actual s3 path for demo purposes - remove this for your own DAG
+        model_s3_path = self.results_from_runs[self.best_learning_rate]['tar']
+        self.best_s3_model_path = '/'.join(model_s3_path.split('/')[-3:])
         self.best_model_metrics = self.results_from_runs[self.best_learning_rate]['metrics']
         self.best_model_summary = self.results_from_runs[self.best_learning_rate]['summary']
         self.next(self.end)
