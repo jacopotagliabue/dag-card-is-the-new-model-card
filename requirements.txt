@@ -1,0 +1,6 @@
+metaflow==2.2.5
+wandb==0.10.8
+tensorflow==2.4.0
+keras==2.4.3
+jinja2==2.11.2
+python-dotenv==0.13.0

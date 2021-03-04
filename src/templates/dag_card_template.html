@@ -245,6 +245,7 @@
                                 <br/><br/><span><b>Accuracy (Mean Square Error)</b>: {{ run.accuracy }}</span>
                                 <br/><br/><span><b>Learning rate</b>: {{ run.best_learning_rate }}</span>
                                 <br/><br/><span><b>Model file on s3</b>: {{ run.model_path }}</span><br/><br/>
+                                <br/><br/><br/><br/><span>{{ run.best_model_summary }}</span><br/><br/>
                             </details>
                             {% endfor %}
                         </div>
