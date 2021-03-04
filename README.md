@@ -37,5 +37,13 @@ by their [examples](https://modelcards.withgoogle.com/face-detection).
 all built with out of the box functions from [Chart.js](https://www.chartjs.org/).
 * Table style is from [here](https://dev.to/dcodeyt/creating-beautiful-html-tables-with-css-428l).
 
+
+## Open Points / Backlog
+
+In no particular order, some open points and improvements to make the card builder a little less hackish 
+(together with the TODOs already in the code, of course).
+
+* include a visualization of the model, even if it's just the standard Keras-generated pic.
+
 ## License
 This code is provided "as is" and it is licensed under the terms of the MIT license.

@@ -62,7 +62,10 @@ class RegressionModel(FlowSpec):
         x_test = np.array([[_[0]] for _ in self.test_dataset])
         y_test = np.array([_[1] for _ in self.test_dataset])
         x_model = tf.keras.Sequential([layers.Dense(input_shape=[1,], units=1)])
-        self.model_summary = x_model.summary()
+        # print model summary to a string
+        stringlist = []
+        x_model.summary(print_fn=lambda x: stringlist.append(x))
+        self.model_summary = "\n".join(stringlist)
         x_model.compile(
             optimizer=tf.optimizers.Adam(learning_rate=self.learning_rate),
             loss='mean_absolute_error', metrics=[tf.keras.metrics.MeanSquaredError()])

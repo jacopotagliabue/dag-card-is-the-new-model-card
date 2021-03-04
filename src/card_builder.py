@@ -102,20 +102,29 @@ def get_metaflow_runs_and_artifacts(flow_name: str, top_n: int = 2):
 
     For more info on the API, read here: https://docs.metaflow.org/metaflow/client
 
+    TODO: now runs info are selected from a predefined step (join_runs), and predefined properties. This should
+    of course be made configurable in the future!
+
     :param flow_name: name of the DAG
     :param top_n: max number of runs to displayed in the card
     :return: MetaflowData
     """
     namespace(None)  # -> get all runs from all users
     flow = Flow(flow_name)
+    # name of the target step
+    target_step_name = 'join_runs'
     # filter for runs that ended successfully
     runs = [r for r in list(flow) if r.successful]
-    print("Total of #{} finished run for {}.".format(len(runs), flow_name))
+    # print total # runs for debug
+    print("Total of #{} successful runs for {}.".format(len(runs), flow_name))
     # for the latest top n runs, prepare objects to display
     runs_list = []
     for run in runs:
         user = find_user_from_tags(run.tags)
-        target_step =  Step('{}/{}/{}'.format(flow_name, run.id, 'join_runs'))
+        # check if the run includes the target step
+        if not any([target_step_name in str(step) for step in list(run.steps())]):
+            continue
+        target_step =  Step('{}/{}/{}'.format(flow_name, run.id, target_step_name))
         data = target_step.task.data
         new_run = {
             'user': user,
@@ -130,7 +139,7 @@ def get_metaflow_runs_and_artifacts(flow_name: str, top_n: int = 2):
         }
         runs_list.append(new_run)
 
-    # return only top N, but user stats are run on the entire history!
+    # return only top N runs for display, but user stats are run on the entire history!
     return MetaflowData(top_runs=runs_list[:top_n], user_counter=Counter(r['user'] for r in runs_list))
 
 

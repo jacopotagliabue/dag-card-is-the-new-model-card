@@ -159,5 +159,4 @@ venv/
 *model-*/
 wandb/
 
-card/*.html
-card/*.png
+card/
