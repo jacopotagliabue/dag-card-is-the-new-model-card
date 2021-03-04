@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+    <title>{{ model_name }} Card</title>
+    <style>
+    /* avoid white space on top */
+    * {
+        margin: 0;
+        padding: 0;
+        border: 0;
+        outline: 0;
+        font-size: 100%;
+        vertical-align: baseline;
+        background: transparent;
+        font-family: Roboto, sans-serif;
+    }
+    a, a:hover, a:visited, a:active {
+      color: inherit;
+      text-decoration: none;
+     }
+    canvas{
+      -moz-user-select: none;
+      -webkit-user-select: none;
+      -ms-user-select: none;
+	}
+    /* generic container */
+    #container {
+        width: 1024px;
+        margin-left: auto;
+        margin-right: auto;
+        margin-bottom: 75px;
+        color: #3c4043;
+    }
+    /* contains the two col layout */
+    .flex-container {
+        display: flex;
+        flex-direction: row;
+    }
+    /* left menu */
+    .flex-left {
+        width: 30%;
+        height: 100vh;
+    }
+    /* right side, content */
+    .flex-right {
+        width: 70%;
+        padding-top: 20px;
+        padding-left: 75px;
+    }
+    /* big card rectangle */
+    #cardBox {
+        color: white;
+        background-color: royalblue;
+        border-radius: 0px 0px 10px 10px;
+        height: 250px;
+        position: relative;
+    }
+    #cardTitle {
+        margin: 0;
+        padding-left: 5px;
+        padding-right: 5px;
+        position: absolute;
+        top: 50%;
+        -ms-transform: translateY(-50%);
+        transform: translateY(-50%);
+    }
+    /* left menu */
+    #navMenu {
+        margin-top: 10px;
+        padding-left: 5px;
+        padding-right: 5px;
+    }
+    .navMenuItem {
+        padding-top: 5px;
+        padding-bottom: 5px;
+        padding-left: 5px;
+        border-radius: 5px;
+    }
+    .navMenuItem:hover {
+        color: royalblue;
+        background-color: rgba(65, 105, 225, 0.15);
+    }
+    /* content items */
+    /* card section properties */
+    .cardSection {
+
+    }
+    .sectionTitle {
+        font-size: larger;
+        padding-top: 40px;
+        padding-bottom: 30px;
+    }
+    .sectionContent {
+
+    }
+    #dagDetails {
+        margin-top: 30px;
+    }
+    #modelCharts {
+        margin-top: 30px;
+    }
+    #dagParams {
+        margin-top: 50px;
+    }
+    details {
+        border: 1px solid royalblue;
+        border-radius: 4px;
+        padding: .5em .5em 0;
+        margin-top: 15px;
+        font-size: smaller;
+    }
+    summary {
+        font-weight: bold;
+        margin: -.5em -.5em 0;
+        padding: .5em;
+        color: royalblue;
+        background-color: rgba(65, 105, 225, 0.15);
+    }
+    /* Table style: from https://dev.to/dcodeyt/creating-beautiful-html-tables-with-css-428l */
+    .cardTable {
+        font-size: smaller;
+        border-collapse: collapse;
+        margin: 25px 0;
+        min-width: 400px;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+    }
+    .cardTable thead tr {
+        background-color: royalblue;
+        color: #ffffff;
+        text-align: left;
+    }
+    .cardTable th,  .cardTable td {
+        padding: 12px 15px;
+    }
+    .cardTable tbody tr {
+        border-bottom: 1px solid #dddddd;
+    }
+    .cardTable tbody tr:nth-of-type(even) {
+        background-color: #f3f3f3;
+    }
+    .cardTable tbody tr:last-of-type {
+        border-bottom: 2px solid royalblue;
+    }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <!-- this holds the two col layout -->
+        <div class="flex-container">
+            <!-- this contains the left col, i.e. the title card + menu -->
+            <div class="flex-left">
+                <div id="cardBox">
+                    <div id="cardTitle">
+                        <span style="font-size: xx-large">{{ model_name }}</span><br/>
+                        <span style="font-size: smaller">Card version: v{{ card_version }}</span><br/>
+                        <span style="font-size: smaller">Last update: {{ last_update }}</span>
+                    </div>
+                </div>
+                <!-- TODO: template this together with the content section below -->
+                <div id="navMenu">
+                    <div class="navMenuItem"><a href="#overviewSection">Overview</a></div>
+                    <div class="navMenuItem"><a href="#ownersSection">Owners</a></div>
+                    <div class="navMenuItem"><a href="#dagSection">DAG</a></div>
+                    <div class="navMenuItem"><a href="#modelSection">Model</a></div>
+                    <div class="navMenuItem"><a href="#feedbackSection">Feedback</a></div>
+                </div>
+            </div>
+            <!-- this contains the right col, i.e. the actual verbose content -->
+            <div class="flex-right">
+                <a name="overviewSection"></a>
+                <div class="cardSection">
+                    <div class="sectionTitle">{{ model_name }}</div>
+                    <div class="sectionContent">
+                        <div>{{ model_overview }}</div>
+                    </div>
+                </div>
+                <a name="ownersSection"></a>
+                <div class="cardSection">
+                    <div class="sectionTitle">Owners</div>
+                    <div class="sectionContent">
+                        <div>
+                            <!-- TODO: I hate css -->
+                            <table>
+                                <tr>
+                                    {% for owner in owners %}
+                                        <td align="center" style="padding-right: 10px;">
+                                            <img style="border-radius: 50%;" src="{{ owner.pic }}" width="50"/>
+                                        </td>
+                                    {% endfor %}
+                                </tr>
+                                <tr>
+                                    {% for owner in owners %}
+                                        <td align="center" style="padding-right: 10px; font-size: x-small; font-style: italic;">
+                                            {{ owner.name }}
+                                        </td>
+                                    {% endfor %}
+                                </tr>
+                            </table>
+                        </div>
+                         <div id="ownerCharts" align="center">
+                            <div style="width:75%;">
+                                <canvas id="ownerCanvas"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <a name="dagSection"></a>
+                <div class="cardSection">
+                    <div class="sectionTitle">DAG</div>
+                    <div class="sectionContent">
+                        <div align="center">
+                            <img src="{{ dag_picture }}" width="500" />
+                        </div>
+                        <div id="dagParams">
+                            <em>Static Files and Parameters</em>
+                            <table class="cardTable">
+                                <thead><th>Name</th><th>Type</th></thead>
+                            {% for param in dag_params %}
+                                <tr><td>{{ param.name }}</td><td>{{ param.type }}</td></tr>
+                            {% endfor %}
+                            </table>
+                        </div>
+                        <div id="dagDetails">
+                            <em>Step Details</em>
+                            {% for step in flow %}
+                            <details>
+                              <summary>{{ step.name }}</summary>
+                              {{ step.description }}
+                              <br/><br/><span><b>Next step</b>: {{ step.next }}</span><br/><br/>
+                            </details>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                <a name="modelSection"></a>
+                <div class="cardSection">
+                    <div class="sectionTitle">Model</div>
+                    <div class="sectionContent">
+                        <div id="modelRuns">
+                            {% for run in metaflow_runs %}
+                            <details>
+                              <summary>Run: {{ run.name }}, {{ run.finished_at }}</summary>
+                                <br/><br/><span><b>Accuracy (Mean Square Error)</b>: {{ run.accuracy }}</span>
+                                <br/><br/><span><b>Learning rate</b>: {{ run.best_learning_rate }}</span>
+                                <br/><br/><span><b>Model file on s3</b>: {{ run.model_path }}</span><br/><br/>
+                            </details>
+                            {% endfor %}
+                        </div>
+                        <div id="modelCharts" align="center">
+                            <div style="width:75%;">
+                                <canvas id="modelCanvas"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- TODO: connect feedback section with actionable item -->
+                <a name="feedbackSection"></a>
+                <div class="cardSection">
+                    <div class="sectionTitle">Feedback</div>
+                    <div class="sectionContent">
+                        We’d love your feedback on this card and the model itself - please also share any unexpected results.
+                        You can open a ticket by clicking <span style="color: royalblue">here</span>.</div>
+                </div>
+                <div class="cardSection">
+                    <div class="sectionTitle">Acknowledgments</div>
+                    <div class="sectionContent">
+                        Metaflow cards are inspired by
+                        <a href="https://arxiv.org/pdf/1810.03993.pdf" target="_blank" style="color: royalblue">model cards</a>
+                        from Google.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        var WANDB_RUN = {{ wandb_runs|tojson }};
+        console.log(WANDB_RUN);
+        var USER_RUNS = {{ user_runs|tojson }};
+        console.log(USER_RUNS);
+    </script>
+    <script>
+        /**
+         * Returns a random number between min (inclusive) and max (exclusive)
+        */
+        function getRandomArbitrary(min, max) {
+            return Math.random() * (max - min) + min;
+        }
+
+        var datasets = [];
+        var labels = [];
+        for(var i = 0; i < WANDB_RUN[0]['history'].length; i++) {
+            labels.push(WANDB_RUN[0]['history'][i]['epoch']);
+        }
+        console.log(labels);
+        for(var i = 0; i < WANDB_RUN.length; i++) {
+            var h = WANDB_RUN[i]['history'];
+            var data = [];
+            for (var j = 0; j < h.length; j++) {
+                data.push(h[j]['loss'])
+            }
+            var color = 'rgb(' + getRandomArbitrary(0, 256) + ', ' + getRandomArbitrary(0, 256) + ', ' + getRandomArbitrary(0, 256) + ')';
+            var d = {
+                        label: WANDB_RUN[i].name,
+                        fill: false,
+                        borderColor: color,
+                        backgroundColor: color,
+                        data: data
+                    };
+            datasets.push(d);
+        }
+        // FROM: https://www.chartjs.org/docs/latest/getting-started/
+        var ctx = document.getElementById('modelCanvas').getContext('2d');
+        var chart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: datasets
+            },
+            // Label the axes
+            options: {
+                scales: {
+                    yAxes: [{
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'loss'
+                        }
+                    }],
+                    xAxes: [{
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'epoch'
+                        }
+                    }]
+                }
+            }
+        });
+        console.log('Chart done!');
+    </script>
+    <script>
+        var ctx_bars = document.getElementById('ownerCanvas').getContext('2d');
+        var user_labels = Object.keys(USER_RUNS);
+        var user_data = [];
+        for(var i = 0; i < user_labels.length; i ++) {
+            user_data.push(USER_RUNS[user_labels[i]]);
+        }
+        var chart_bars = new Chart(ctx_bars,
+            {
+                "type":"bar",
+                "data":{
+                    "labels":  user_labels,
+                    "datasets":[
+                        {
+                            "label":"Runs per user",
+                            "data": user_data,
+                            "fill": false,
+                            "backgroundColor": "rgba(65, 105, 225, 0.2)",
+                            "borderColor": "rgb(65, 105, 225)",
+                            "borderWidth":1
+                        }
+                        ]
+                },
+                "options": {
+                    "scales":
+                        {"yAxes":
+                                [
+                                    {
+                                        "ticks": {"beginAtZero": true},
+                                        scaleLabel: { labelString: 'runs'}
+                                    }
+                                    ]
+                            }
+                    }
+            });
+    </script>
+</body>
+</html>

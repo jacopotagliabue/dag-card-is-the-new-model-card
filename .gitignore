@@ -154,10 +154,9 @@ fabric.properties
 venv/
 *.ini
 *.env
-*.json
-*.txt
-*.metaflow
+*.metaflow/
 *.gz
 *model-*/
+wandb/
 
 card/
