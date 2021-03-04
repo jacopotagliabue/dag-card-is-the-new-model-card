@@ -109,7 +109,7 @@ def get_metaflow_runs_and_artifacts(flow_name: str, top_n: int = 2):
     namespace(None)  # -> get all runs from all users
     flow = Flow(flow_name)
     # filter for runs that ended successfully
-    runs = [r for r in list(flow) if r.finished]
+    runs = [r for r in list(flow) if r.successful]
     print("Total of #{} finished run for {}.".format(len(runs), flow_name))
     # for the latest top n runs, prepare objects to display
     runs_list = []
@@ -195,14 +195,14 @@ def get_dag_params(obj: FlowSpec):
     :param obj: a FlowSpec object from Metaflow
     :return: list of dictionaries, each one describing a file/parameter for the DAG
     """
-    params = []
-    for p in obj._get_parameters():
-        params.append({
+    return [
+        {
             'name': p[0],
             'type': 'file' if isinstance(p[1], includefile.IncludeFile) else 'parameter'
-        })
+        }
+        for p in obj._get_parameters()
+    ]
 
-    return params
 
 def build_dag_card():
     """
@@ -247,14 +247,14 @@ def build_dag_card():
         'metaflow_runs': metaflow_data.top_runs,
         'wandb_runs': wandb_runs
     }
-    # get html template for final substitution
+    # all data is ready, now it's time to get the template and create the html page!
     template = load_jinja_template(os.path.join(CURRENT_DIR, 'templates'), TEMPLATE_FILE_NAME)
-    # finally, create html page!
     template.stream(params).dump('{}/{}_card.html'.format(CARD_OUTPUT_PATH, flow_name))
-    # say bye!
+    # finally, time to say good-bye!
     print("\nAll done at {}: see you, space cowboy!".format(datetime.utcnow()))
     return
 
 
 if __name__ == "__main__":
+    # execute the main function
     build_dag_card()
