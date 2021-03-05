@@ -77,7 +77,6 @@ class RegressionModel(FlowSpec):
             callbacks=[WandbCallback()])
         self.hist = history.history
         self.results = x_model.evaluate(x_test, y_test)
-        print("Test set results: {}".format(self.results))
         model_name = "regression-model-{}/1".format(self.learning_rate)
         local_tar_name = 'model-{}.tar.gz'.format(self.learning_rate)
         x_model.save(filepath=model_name)
@@ -146,16 +145,17 @@ class RegressionModel(FlowSpec):
         for t in behavioral_tests['tests']:
             new_test_result = dict(t)
             new_test_result['prediction'] = best_model.predict(np.array(t['input']))[0][0]
-            print("Running test {}:\nPredicted value: {}, expected: {}".format(
-                t['name'],
-                new_test_result['prediction'],
-                t['expected']
-            ))
             # quickly parse the expected formula and decide if test is successful or not
             expected_is_greater = t['expected'].split()[0].strip() == '>' # boolean, True if expression is '> X'
             expected_value = float(t['expected'].split()[1].strip())
-            test_result = new_test_result['prediction'] > expected_value == expected_is_greater
+            test_result = (new_test_result['prediction'] > expected_value) == expected_is_greater
             new_test_result['is_successful'] = test_result
+            print("Running test {}:\nPredicted value: {}, expected: {}, success: {}".format(
+                t['name'],
+                new_test_result['prediction'],
+                t['expected'],
+                new_test_result['is_successful']
+            ))
             tests.append(new_test_result)
         # store and version test results in Metaflow
         self.behavioral_test_results = tests

@@ -102,8 +102,8 @@ def get_metaflow_runs_and_artifacts(flow_name: str, top_n: int = 2):
 
     For more info on the API, read here: https://docs.metaflow.org/metaflow/client
 
-    TODO: now runs info are selected from a predefined step (join_runs), and predefined properties. This should
-    of course be made configurable in the future!
+    TODO: now runs info are selected from predefined steps (join_runs, behavioral_tests),
+    and predefined properties. This should of course be made configurable in the future!
 
     :param flow_name: name of the DAG
     :param top_n: max number of runs to displayed in the card
@@ -111,8 +111,6 @@ def get_metaflow_runs_and_artifacts(flow_name: str, top_n: int = 2):
     """
     namespace(None)  # -> get all runs from all users
     flow = Flow(flow_name)
-    # name of the target step
-    target_step_name = 'join_runs'
     # filter for runs that ended successfully
     runs = [r for r in list(flow) if r.successful]
     # print total # runs for debug
@@ -120,6 +118,9 @@ def get_metaflow_runs_and_artifacts(flow_name: str, top_n: int = 2):
     # for the latest top n runs, prepare objects to display
     runs_list = []
     for run in runs:
+        # name of the target step
+        target_step_name = 'join_runs'
+        # get user responsible for the run
         user = find_user_from_tags(run.tags)
         # check if the run includes the target step
         if not any([target_step_name in str(step) for step in list(run.steps())]):
@@ -136,9 +137,16 @@ def get_metaflow_runs_and_artifacts(flow_name: str, top_n: int = 2):
             'mean_sq_error': data.best_model_metrics[-1] if 'best_model_metrics' in data else 0.0,
             'best_learning_rate': data.best_learning_rate if 'best_learning_rate' in data else None,
             'best_model_summary': data.best_model_summary if 'best_model_summary' in data
-                                                             and data.best_model_summary is not None else '',
-            'behavioral_test_results': data.behavioral_test_results if 'behavioral_test_results' in data else None
+                                                             and data.best_model_summary is not None else ''
         }
+        # finally, get tests data if step is present, or default to None
+        target_step_name = 'behavioral_tests'
+        if not any([target_step_name in str(step) for step in list(run.steps())]):
+            new_run['behavioral_test_results'] = None
+        else:
+            test_data = Step('{}/{}/{}'.format(flow_name, run.id, target_step)).task.data
+            new_run['behavioral_test_results'] = test_data.behavioral_test_results if 'behavioral_test_results' in test_data else None
+        # append the run with its properties to the final list
         runs_list.append(new_run)
 
     # return only top N runs for display, but user stats are run on the entire history!
@@ -258,6 +266,7 @@ def build_dag_card():
         'metaflow_runs': metaflow_data.top_runs,
         'wandb_runs': wandb_runs
     }
+    print(params['metaflow_runs'][0])
     # all data is ready, now it's time to get the template and create the html page!
     template = load_jinja_template(os.path.join(CURRENT_DIR, 'templates'), TEMPLATE_FILE_NAME)
     template.stream(params).dump('{}/{}_card.html'.format(CARD_OUTPUT_PATH, flow_name))

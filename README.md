@@ -47,7 +47,11 @@ all built with out of the box functions from [Chart.js](https://www.chartjs.org/
 In no particular order, some open points and improvements to make the card builder a little less hackish 
 (together with the TODOs already in the code, of course).
 
-* include a visualization of the model, even if it's just the standard Keras-generated pic.
+* the entire HTML/CSS/JS template is front-end code written by back-end people: as such, it will
+make front-end people cry: while definitely enough to produce a decent-looking page, some refactoring is
+needed to make it prettier and more readable;
+* to give a quick overview of the model, we should also include a visualization of the model 
+ (even if it's just the standard Keras-generated pic).
 
 ## License
 This code is provided "as is" and it is licensed under the terms of the MIT license.
