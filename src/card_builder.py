@@ -144,7 +144,7 @@ def get_metaflow_runs_and_artifacts(flow_name: str, top_n: int = 2):
         if not any([target_step_name in str(step) for step in list(run.steps())]):
             new_run['behavioral_test_results'] = None
         else:
-            test_data = Step('{}/{}/{}'.format(flow_name, run.id, target_step)).task.data
+            test_data = Step('{}/{}/{}'.format(flow_name, run.id, target_step_name)).task.data
             new_run['behavioral_test_results'] = test_data.behavioral_test_results if 'behavioral_test_results' in test_data else None
         # append the run with its properties to the final list
         runs_list.append(new_run)
@@ -266,6 +266,7 @@ def build_dag_card():
         'metaflow_runs': metaflow_data.top_runs,
         'wandb_runs': wandb_runs
     }
+    # print a run for debug purposes
     print(params['metaflow_runs'][0])
     # all data is ready, now it's time to get the template and create the html page!
     template = load_jinja_template(os.path.join(CURRENT_DIR, 'templates'), TEMPLATE_FILE_NAME)
