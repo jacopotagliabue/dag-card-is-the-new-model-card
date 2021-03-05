@@ -132,11 +132,12 @@ def get_metaflow_runs_and_artifacts(flow_name: str, top_n: int = 2):
             'finished_at': run.finished_at,
             # make sure we don't ask for a property in a run without it (e.g. it was added later).
             'model_path': data.best_s3_model_path if 'best_s3_model_path' in data else None,
-            # accuracy is the last float in the array
-            'accuracy': data.best_model_metrics[-1] if 'best_model_metrics' in data else 0.0,
+            # mean sq. error is the last float in the array
+            'mean_sq_error': data.best_model_metrics[-1] if 'best_model_metrics' in data else 0.0,
             'best_learning_rate': data.best_learning_rate if 'best_learning_rate' in data else None,
             'best_model_summary': data.best_model_summary if 'best_model_summary' in data
-                                                             and data.best_model_summary is not None else ''
+                                                             and data.best_model_summary is not None else '',
+            'behavioral_test_results': data.behavioral_test_results if 'behavioral_test_results' in data else None
         }
         runs_list.append(new_run)
 

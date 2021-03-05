@@ -25,6 +25,7 @@
                     <div class="navMenuItem"><a href="#ownersSection">Owners</a></div>
                     <div class="navMenuItem"><a href="#dagSection">DAG</a></div>
                     <div class="navMenuItem"><a href="#modelSection">Model</a></div>
+                    <div class="navMenuItem"><a href="#testsSection">Tests</a></div>
                     <div class="navMenuItem"><a href="#feedbackSection">Feedback</a></div>
                 </div>
             </div>
@@ -103,7 +104,7 @@
                             {% for run in metaflow_runs %}
                             <details>
                               <summary>Run: {{ run.name }}, {{ run.finished_at }}</summary>
-                                <br/><br/><span><b>Accuracy (Mean Square Error)</b>: {{ run.accuracy }}</span>
+                                <br/><br/><span><b>Mean Squared Error</b>: {{ run.mean_sq_error }}</span>
                                 <br/><br/><span><b>Learning rate</b>: {{ run.best_learning_rate }}</span>
                                 <br/><br/><span><b>Model file on s3</b>: {{ run.model_path }}</span>
                                 <br/><br/>
@@ -122,6 +123,30 @@
                                 <canvas id="modelCanvas"></canvas>
                             </div>
                         </div>
+                    </div>
+                </div>
+                <a name="testsSection"></a>
+                <div class="cardSection">
+                    <div class="sectionTitle">Behavioral Tests</div>
+                    <div class="sectionContent">
+                        <em>Behavioral test results (from last run only):</em>
+                        <!-- TODO: decide if/how show more runs here! -->
+                        <table class="cardTable">
+                            <thead><th>Name</th><th>Description</th><th>Input</th><th>Exp.</th><th>Pred.</th></thead>
+                            {% for t in metaflow_runs[0].behavioral_test_results %}
+                                <tr>
+                                    <td>{{ t.name }}</td>
+                                    <td>{{ t.description }}</td>
+                                    <td>{{ t.input[0] }}</td>
+                                    <td>{{ t.expected }}</td>
+                                    {% if t.is_successful %}
+                                         <td style="background-color: lightgreen;">{{ t.prediction }}</td>
+                                    {% else %}
+                                         <td style="background-color: lightcoral;">{{ t.prediction }}</td>
+                                    {% endif %}
+                                </tr>
+                            {% endfor %}
+                        </table>
                     </div>
                 </div>
                 <!-- TODO: connect feedback section with actionable item -->

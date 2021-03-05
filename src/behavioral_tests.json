@@ -1,0 +1,19 @@
+{
+	"tests": [{
+			"name": "LowX",
+			"description": "What happens for very low values of X?",
+			"input": [
+				[0.57457947234]
+			],
+			"expected": "< 2.0"
+		},
+		{
+			"name": "HighX",
+			"description": "What happens for very high values of X?",
+			"input": [
+				[15.7234]
+			],
+			"expected": "> 20.0"
+		}
+	]
+}

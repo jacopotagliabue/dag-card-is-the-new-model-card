@@ -19,12 +19,16 @@ Assuming you are using named profiles for Metaflow, you can run the DAG with:
 
 `METAFLOW_PROFILE=my_profile python training_flow.py run`
 
+The DAG is mostly just a simplified version of the one in our [previous tutorial](https://github.com/jacopotagliabue/no-ops-machine-learning/tree/main/serverless);
+as such, it is just built for pedagogical purposes with some shortcuts here and there (e.g. re-using the local
+model folder to run behavioral tests).
+
 ### Card Builder
 Assuming you are using named profiles for Metaflow, you can create a DAG card with:
 
 `METAFLOW_PROFILE=my_profile python card_builder.py`
 
-The result will be a static HTML in the `card` folder (or whenever you have specified in the code).
+The result will be a static HTML in the `card` folder.
 
 ## Acknowledgements
 
