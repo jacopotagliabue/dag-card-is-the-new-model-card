@@ -28,6 +28,7 @@ load_dotenv(verbose=True)
 assert os.getenv('WANDB_API_KEY') is not None
 import wandb
 
+
 # some global vars
 TEMPLATE_FILE_NAME = 'dag_card_template.html'
 CURRENT_DIR = os.path.dirname(os.path.realpath(__file__))
