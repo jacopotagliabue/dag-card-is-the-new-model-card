@@ -1,13 +1,13 @@
 """
-    This is a sample builder script, that retrieves data from several APIs (e.g. WANDB) and data sources
-    (e.g. user file) and prettify the information so that it can fill the slots of a HTML template
-    representing a prototypical "DAG card". If you run Metaflow with a custom profile,
-    remember to set the METAFLOW_PROFILE env variable before running the builder script.
+    This is a sample builder script, that retrieves data from APIs (e.g. WANDB) and data sources
+    (e.g. user file) and prettifies the information so that it can fill the slots of a HTML template
+    for a "DAG card". If you run Metaflow with a custom profile, remember to set the METAFLOW_PROFILE
+     env variable before running the builder script.
 
-    While the code is fully-functional, it is a very much MVP script, which gets the job done by mixing some
-    functionalities found inside Metaflow classes and data from WANDB APIs. Pretty much everything can be
-    improved, but the code still does a good job in producing a credible DAG card to receive feedback
-    from multiple stakeholders - other ML engineers, PMs, marketing folks, etc.
+    While the code is fully-functional, it is very much a MVP, which gets the job done by mixing some
+    functionalities found inside Metaflow classes and data from WANDB APIs. Everything can be
+    improved, but the code works in practice to produce a credible DAG card and receive feedback
+    from stakeholders - other ML engineers, PMs, marketing folks, etc.
 
     For the full back-story, motivations, backlog, please refer to the README file and the
     companion blog post!
@@ -116,7 +116,7 @@ def get_metaflow_runs_and_artifacts(flow_name: str, top_n: int = 2):
     runs = [r for r in list(flow) if r.successful]
     # print total # runs for debug
     print("Total of #{} successful runs for {}.".format(len(runs), flow_name))
-    # for the latest top n runs, prepare objects to display
+    # loop over runs, to prepare objects to display and build up user counters
     runs_list = []
     for run in runs:
         # name of the target step
@@ -256,7 +256,7 @@ def build_dag_card():
         'card_version': CARD_VERSION,
         'last_update': datetime.date(datetime.now()),
         'model_overview': str(obj.__doc__).replace('\n', ' ').strip(),
-        # default to MF user if not user is in the meta db
+        # default to MF user tag if user is not in the db
         'owners': [USER_META.get(user, user) for user in list(metaflow_data.user_counter.keys())],
         # make sure we use the human readable name, when available in the db, for the user chart
         'user_runs': {USER_META.get(user, {}).get('name', user): count
