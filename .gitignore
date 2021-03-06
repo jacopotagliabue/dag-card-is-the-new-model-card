@@ -158,3 +158,5 @@ venv/
 *.gz
 *model-*/
 wandb/
+
+card/
