@@ -2,10 +2,47 @@
 Template-based generation of DAG cards from Metaflow classes, inspired by Google cards for machine learning models.
 
 ## Overview
-WIP
+[Model cards](https://arxiv.org/abs/1810.03993) have been designed to be a 
+"[reference for all, regardless of expertise](https://modelcards.withgoogle.com/about)", a digital "one-pager"
+collecting quantitative and qualitative information about a given ML model, its use cases, strengths and biases.
+In this repo, we present a small experiment, _Dag Cards_, which are a small tweak on the original ones, in particular
+as adapted to a more general ML concept (a DAG/pipeline, not just the model _per se_) and to a fundamentally
+organization-internal use case.
+
+In particular, our small script combines structural information about a Metaflow's DAG with data about recent runs,
+artifacts, tests etc.: while being a tiny script, it provides enough functionalities to build realistic cards
+and collect feedback from stakeholders - given that we only use popular libraries and APIs (_Jinja_ for templating, 
+_Metaflow_ for DAG, _Weights & Biases_ for experiment tracking), we hope the setup is general enough to be almost
+immediately applicable to other workflows as well.
+
+Please refer to the companion [blog post](https://arxiv.org/abs/1810.03993) (WIP) for the back-story and some
+more context on cards, DAGs, behavioral tests etc.
+
+## Structure
+
+### Flow
+
+The `card_builder.py` script runs with a very simple logic:
+
+![Script structure](/images/structure.jpg)
+
+Given a HTML template, the script collects and "prettifies" data from different services to come up 
+with a complete picture of the DAG - in our MVP, Metaflow client and W&B APIs (given the modular nature of
+templating, it is easy to extend the basic structure to have different/more services involved). In the end,
+the script "fills" the slots in the template to produce the final stand-alone HTML page with the card.
+
+### Card Structure
+
+The current DAG Card has these main sections:
+
+* _Overview_: high-level description of the DAG.
+* _Owners_: DAG developers.
+* _DAG_: a visual description of the DAG.
+* _Model_: collapsible sections reporting metrics and artifacts for the latest _K_ runs.
+* _Tests_: run [behavioral tests](https://arxiv.org/pdf/2005.04118.pdf).
 
 ## How to Run It
-Code has been developed and tested on Python 3.7; dependencies are specified in the `requirements.txt` file. 
+Code has been developed and tested on Python 3.6; dependencies are specified in the `requirements.txt` file. 
 Please create a local `.env` file based on the provided template, and fill it with your values.
 
 ### Prerequisites
@@ -20,15 +57,15 @@ Assuming you are using named profiles for Metaflow, you can run the DAG with:
 `METAFLOW_PROFILE=my_profile python training_flow.py run`
 
 The DAG is mostly just a simplified version of the one in our [previous tutorial](https://github.com/jacopotagliabue/no-ops-machine-learning/tree/main/serverless);
-as such, it is just built for pedagogical purposes with some shortcuts here and there (e.g. re-using the local
-model folder to run behavioral tests).
+as such, it is built for pedagogical purposes (i.e. having a DAG to build a card for) 
+with some shortcuts here and there (e.g. re-using the local model folder to run behavioral tests).
 
 ### Card Builder
 Assuming you are using named profiles for Metaflow, you can create a DAG card with:
 
 `METAFLOW_PROFILE=my_profile python card_builder.py`
 
-The result will be a static HTML in the `card` folder.
+The result will be a static HTML page in the `card` folder.
 
 ## Acknowledgements
 
