@@ -24,7 +24,7 @@ more context on cards, DAGs, behavioral tests etc.
 
 The `card_builder.py` script runs with a very simple logic:
 
-![Script structure](/images/structure.jpg)
+![Script structure](structure.jpg)
 
 Given a HTML template, the script collects and "prettifies" data from different services to come up 
 with a complete picture of the DAG - in our MVP, Metaflow client and W&B APIs (given the modular nature of
