@@ -6,14 +6,14 @@ Template-based generation of DAG cards from Metaflow classes, inspired by Google
 "[reference for all, regardless of expertise](https://modelcards.withgoogle.com/about)", a digital "one-pager"
 collecting quantitative and qualitative information about a given ML model, its use cases, strengths and biases.
 In this repo, we present a small experiment, _Dag Cards_, which are a small tweak on the original ones, in particular
-as adapted to a more general ML concept (a DAG/pipeline, not just the model _per se_) and to a fundamentally
+as adapted to a more general ML concept (a DAG/pipeline, not just the model _per se_) and to an
 organization-internal use case.
 
 ![DAG Card](card.png)
 
 In particular, our small script combines structural information about a Metaflow's DAG with data about recent runs,
 artifacts, tests etc.: while being a tiny script, it provides enough functionalities to build realistic cards
-and collect feedback from stakeholders - given that we only use popular libraries and APIs (_Jinja_ for templating, 
+and collect feedback from stakeholders; given that we only use popular libraries and APIs (_Jinja_ for templating, 
 _Metaflow_ for DAG, _Weights & Biases_ for experiment tracking), we hope the setup is general enough to be almost
 immediately applicable to other workflows as well.
 
