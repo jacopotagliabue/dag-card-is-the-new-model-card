@@ -73,7 +73,7 @@ The result will be a static HTML page in the `card` folder.
 
 * Google cards were first presented at [FAT*](https://arxiv.org/abs/1810.03993), 
 and our general styling was influenced by their [examples](https://modelcards.withgoogle.com/face-detection).
-* Metaflow functionalities comes from their standard client plus some 
+* Metaflow functionalities come from their standard client plus some 
 creative digging into their [repo](https://github.com/Netflix/metaflow/tree/master/metaflow).
 * Charts are simple scripts embedded in the page,  built with out-of-the-box functions from [Chart.js](https://www.chartjs.org/).
 * Table style is from [here](https://dev.to/dcodeyt/creating-beautiful-html-tables-with-css-428l).
@@ -81,7 +81,7 @@ creative digging into their [repo](https://github.com/Netflix/metaflow/tree/mast
 ## Open Points / Backlog
 
 In no particular order, some open points and improvements to make the card builder a little less hacky 
-(together with the TODOs already in the code, of course).
+(together with the TODOs already in the code, of course):
 
 * the entire HTML/CSS/JS template is front-end code written by back-end people: as such, it will
 make front-end people cry: while definitely enough to produce a decent-looking page, some refactoring is
@@ -90,7 +90,7 @@ needed to make it prettier and more readable;
 (e.g. in which DAG step do we find properties X, Y, Z for our charts?) should be exposed through a 
 config mechanism of some sort, even if just a simple yml file;
 * to give a quick overview of the model, we should also include a visualization 
- (e.g. starting simply from the standard Keras-generated pic).
+ (e.g. starting from the standard Keras-generated pic).
 
 ## License
 This code is provided "as is" and it is licensed under the terms of the MIT license.
