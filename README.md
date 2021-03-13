@@ -17,7 +17,7 @@ and collect feedback from stakeholders; given that we only use popular libraries
 _Metaflow_ for DAG, _Weights & Biases_ for experiment tracking), we hope the setup is general enough to be almost
 immediately applicable to other workflows as well.
 
-Please refer to the companion [blog post](https://arxiv.org/abs/1810.03993) (WIP) for the back-story and some
+Please refer to the companion [blog post](https://towardsdatascience.com/dag-card-is-the-new-model-card-70754847a111) for the back-story and some
 more context on cards, DAGs, behavioral tests etc.
 
 ## Structure
