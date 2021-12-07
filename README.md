@@ -20,6 +20,8 @@ immediately applicable to other workflows as well.
 Please refer to the companion [blog post](https://towardsdatascience.com/dag-card-is-the-new-model-card-70754847a111) for the back-story and some
 more context on cards, DAGs, behavioral tests etc.
 
+Update Dec. 2021: our joint scholarly [paper](https://arxiv.org/abs/2110.13601) with Outerbounds, presenting the official @card feature for Metaflow, is now available as part of the [DCAI](https://datacentricai.org/) workshop at Neurips 2021.
+
 ## Structure
 
 ### Flow
